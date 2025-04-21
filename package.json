@@ -1,7 +1,7 @@
 {
   "name": "commit-with-ai",
-  "displayName": "Commit_With_AI",
-  "description": "When you select the files you want to commit, the AI will generate the commit message for you!",
+  "displayName": "Commit with AI",
+  "description": "Generate commit messages using AI based on your staged changes.",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.99.0"
@@ -9,13 +9,16 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onView:aiCommitView",
+    "onCommand:commit-with-ai.generateCommitMessage"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "commit-with-ai.generateCommitMessage",
-        "title": "Commit With AI"
+        "title": "Generate AI Commit Message"
       }
     ],
     "menus": {
@@ -23,7 +26,7 @@
         {
           "when": "scmProvider == git",
           "command": "commit-with-ai.generateCommitMessage",
-          "group": "navigation"
+          "group": "1_modification"
         }
       ]
     },
@@ -31,7 +34,7 @@
       "activitybar": [
         {
           "id": "commit-with-ai",
-          "title": "AI 커밋 생성기",
+          "title": "Commit with AI",
           "icon": "resources/icon.svg"
         }
       ]
@@ -40,9 +43,19 @@
       "commit-with-ai": [
         {
           "id": "aiCommitView",
-          "name": "AI 커밋 메시지"
+          "name": "AI Commit"
         }
       ]
+    },
+    "configuration": {
+      "title": "Commit with AI",
+      "properties": {
+        "commitWithAi.openaiApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "OpenAI API Key (or set OPENAI_API_KEY environment variable)"
+        }
+      }
     }
   },
   "scripts": {
@@ -56,6 +69,10 @@
     "lint": "eslint src",
     "test": "vscode-test"
   },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "openai": "^4.0.0"
+  },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
@@ -68,9 +85,7 @@
     "ts-loader": "^9.5.2",
     "typescript": "^5.8.2",
     "webpack": "^5.98.0",
-    "webpack-cli": "^6.0.1"
-  },
-  "dependencies": {
-    "axios": "^0.24.0"
+    "webpack-cli": "^6.0.1",
+    "@types/axios": "^0.14.0"
   }
 }
